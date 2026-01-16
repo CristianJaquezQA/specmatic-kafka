@@ -1,0 +1,10 @@
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/asyncapi.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: kafka:29092
+              protocol: kafka

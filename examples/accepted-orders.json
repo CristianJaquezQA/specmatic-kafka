@@ -1,0 +1,15 @@
+{
+  "name": "publish-accepted-orders-123",
+  "receive": {
+    "topic": "accepted-orders",
+    "payload": {
+      "id": 123,
+      "status": "ACCEPTED",
+      "timestamp": "2025-04-12T14:30:00Z"
+    }
+  }
+}
+
+
+
+

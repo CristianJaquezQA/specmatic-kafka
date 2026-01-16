@@ -1,0 +1,36 @@
+asyncapi: 3.0.0
+info:
+  title: Orders Messaging API
+  version: 1.0.0
+
+channels:
+  acceptedOrders:
+    address: accepted-orders
+    messages:
+      acceptedOrdersMessage:
+        $ref: '#/components/messages/AcceptedOrder'
+
+operations:
+  publishAcceptedOrders:
+    action: send
+    channel:
+      $ref: '#/channels/acceptedOrders'
+    messages:
+      - $ref: '#/channels/acceptedOrders/messages/acceptedOrdersMessage'
+
+components:
+  messages:
+    AcceptedOrder:
+      name: AcceptedOrder
+      contentType: application/json
+      payload:
+        type: object
+        required: [id, status, timestamp]
+        properties:
+          id: { type: integer }
+          status: { type: string }
+          timestamp: { type: string }
+
+
+
+

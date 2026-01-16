@@ -1,0 +1,17 @@
+overlay: 1.0.0
+actions:
+  - target: $.operations.publishAcceptedOrders
+    update:
+      x-specmatic-trigger:
+        type: http
+        method: PUT
+        url: http://host.docker.internal:9000/orders
+        expectedStatus: 200
+        timeoutInSeconds: 5
+        headers:
+          Content-Type: application/json
+        requestBody: '{"id":123,"status":"ACCEPTED","timestamp":"2025-04-12T14:30:00Z"}'
+
+
+
+
