@@ -1,15 +1,33 @@
- Código para ejecutar test.
- 
- docker run --rm --network specmatickafka_default ^
-   -v "%cd%\specmatic.yaml:/usr/src/app/specmatic.yaml" ^
-   -v "%cd%\spec:/usr/src/app/spec" ^
-   -v "%cd%\spec_overlay.yaml:/usr/src/app/spec_overlay.yaml" ^
-   -v "%cd%\examples:/usr/src/app/examples" ^
-   specmatic/specmatic-async test ^
-   --overlay=/usr/src/app/spec_overlay.yaml ^
-   --examples=/usr/src/app/examples
+# Asynchronous Contract Testing with Kafka and Specmatic
+
+This repository contains a **learning-focused example of asynchronous contract testing** using **Apache Kafka** and **Specmatic**.  
+It demonstrates how to define event-driven contracts with **AsyncAPI** and validate Kafka-based message interactions without testing business logic.
+
+## Purpose
+The goal of this project is to demonstrate:
+- Event-driven contract testing concepts
+- Kafka topics and event publishing
+- AsyncAPI as a contract definition
+- Specmatic Async test execution
+
+## Prerequisites
+- Docker
+- Docker Compose
+- Node.js
+
+## Test Reports
+Specmatic generates HTML and JSON reports under:
+build/reports/specmatic/async
 
 
+This repository is intended for **learning and experimentation purposes**.
+
+## Technology Stack
+- Apache Kafka
+- Specmatic (specmatic-async)
+- AsyncAPI
+- Docker & docker-compose
+- Node.js (sample producer)
 
 
    SPECMATICKAFKA
@@ -41,3 +59,64 @@
 ├─ docker-compose.yml
 ├─ spec_overlay.yaml
 └─ specmatic.yaml
+
+
+## How to Run
+
+### 1. Start Kafka Infrastructure
+```bash
+docker-compose up -d
+
+## 2. Run the Sample Producer
+cd order-service
+node server.js
+
+## 3. Run Specmatic Async Contract Tests
+
+docker run --rm --network specmatickafka_default ^
+  -v "%cd%\specmatic.yaml:/usr/src/app/specmatic.yaml" ^
+  -v "%cd%\spec:/usr/src/app/spec" ^
+  -v "%cd%\spec_overlay.yaml:/usr/src/app/spec_overlay.yaml" ^
+  -v "%cd%\examples:/usr/src/app/examples" ^
+  specmatic/specmatic-async test ^
+  --overlay=/usr/src/app/spec_overlay.yaml ^
+  --examples=/usr/src/app/examples
+
+## 4. High-Level Flow (Architecture)
+
++------------------+        +-------------+        +------------------+
+| Node.js Producer | -----> | Kafka Topic | -----> | Specmatic Async  |
+| (Trigger)        |        | (Broker)    |        | (Contract Check) |
++------------------+        +-------------+        +------------------+
+
+
+### What Is Covered
+- Validation of Kafka events against an AsyncAPI contract
+- Topic-level message expectations
+- Asynchronous contract testing flow
+
+### What Is Not Covered
+- Business logic validation
+- Data processing rules
+- Production-ready configurations
+
+## Learning Scope
+This project focuses on understanding asynchronous contract testing concepts,
+not on building production-ready Kafka applications.
+
+
+### For Recruiters
+This project demonstrates:
+- Understanding of **event-driven architectures**
+- Practical usage of **Kafka and AsyncAPI**
+- Knowledge of **contract testing beyond REST APIs**
+- Ability to isolate and validate **asynchronous system interactions**
+
+### Disclaimer
+This project is **not production-ready** and is intended solely for educational purposes.
+
+
+
+
+
+
