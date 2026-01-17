@@ -29,7 +29,7 @@ This repository is intended for **learning and experimentation purposes**.
 - Docker & docker-compose
 - Node.js (sample producer)
 
-
+```
    SPECMATICKAFKA
 ├─ build/
 │  └─ reports/
@@ -59,20 +59,21 @@ This repository is intended for **learning and experimentation purposes**.
 ├─ docker-compose.yml
 ├─ spec_overlay.yaml
 └─ specmatic.yaml
-
+```
 
 ## How to Run
 
 ### 1. Start Kafka Infrastructure
-```bash
+```
 docker-compose up -d
-
+```
 ## 2. Run the Sample Producer
+```
 cd order-service
 node server.js
-
+```
 ## 3. Run Specmatic Async Contract Tests
-
+```
 docker run --rm --network specmatickafka_default ^
   -v "%cd%\specmatic.yaml:/usr/src/app/specmatic.yaml" ^
   -v "%cd%\spec:/usr/src/app/spec" ^
@@ -81,14 +82,14 @@ docker run --rm --network specmatickafka_default ^
   specmatic/specmatic-async test ^
   --overlay=/usr/src/app/spec_overlay.yaml ^
   --examples=/usr/src/app/examples
-
+```
 ## 4. High-Level Flow (Architecture)
-
+```
 +------------------+        +-------------+        +------------------+
 | Node.js Producer | -----> | Kafka Topic | -----> | Specmatic Async  |
 | (Trigger)        |        | (Broker)    |        | (Contract Check) |
 +------------------+        +-------------+        +------------------+
-
+```
 
 ### What Is Covered
 - Validation of Kafka events against an AsyncAPI contract
