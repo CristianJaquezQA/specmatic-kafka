@@ -85,6 +85,48 @@ run-specmatic
 | (Trigger)        |        | (Broker)    |        | (Contract Check) |
 +------------------+        +-------------+        +------------------+
 ```
+## Project Files Overview (What each file is for)
+
+This repository is a learning-focused POC to understand how **Specmatic Async + Kafka + AsyncAPI + Docker compose** can be used for **contract testing** in event-driven systems.
+
+### Core Contract & Specmatic Configuration
+- **`asyncapi.yaml`**
+  - The **contract** (AsyncAPI). Defines Kafka topics/channels, message schemas, and payload structure.
+  - This is the source of truth used by Specmatic for validation.
+
+- **`specmatic.yaml`**
+  - Specmatic configuration file.
+  - Defines where the AsyncAPI spec is located and how Specmatic connects to Kafka
+    (e.g. `kafka:29092` when running inside Docker).
+
+- **`spec_overlay.yaml`**
+  - Testing-only overlay configuration.
+  - Used to define **triggers** (such as HTTP calls) that allow Specmatic to execute flows
+    and observe side effects, without modifying the contract itself.
+
+### Test Data
+- **`examples/`**
+  - Contains example payloads used during contract testing.
+  - Examples must conform to the schemas defined in `asyncapi.yaml`.
+
+- **`examples/accepted-orders.json`**
+  - Example payload for the `accepted-orders` Kafka topic.
+  - Used by Specmatic during execution to validate producer behavior against the contract.
+
+### Local Test Harness
+- **`server.js`**
+  - Lightweight **test harness** (not production code).
+  - Exposes HTTP endpoints used as triggers and publishes events to Kafka.
+  - When running on the host machine, it connects to Kafka via `localhost:9092`.
+  - Specmatic runs in Docker and connects to Kafka via `kafka:29092`.
+
+### Infrastructure
+- **`docker-compose.yml`**
+  - Spins up Kafka locally using Docker for testing purposes.
+
+### Dependency Lock
+- **`package-lock.json`**
+  - Locks Node.js dependency versions to ensure reproducible installs.
 
 ### What Is Covered
 - Validation of Kafka events against an AsyncAPI contract
