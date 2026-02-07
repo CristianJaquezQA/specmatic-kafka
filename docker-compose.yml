@@ -24,12 +24,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-  order-service:
-    build: ./order-service
-    depends_on:
-      - kafka
-    ports:
-      - "9000:9000"
 
 
 
