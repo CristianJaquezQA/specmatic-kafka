@@ -95,33 +95,6 @@ app.get("/orders/:id", async (req, res) => {
 async function startKafka() {
   // Connect producer before sending messages
   await producer.connect();
-
-  // Connect consumer and subscribe to the topic
-  await consumer.connect();
-  await consumer.subscribe({
-    topic: "out-for-delivery-orders",
-    fromBeginning: false,
-  });
-
-  // Process incoming Kafka messages
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      const text = message.value?.toString("utf8") || "";
-      try {
-        // Expected payload example:
-        // { orderId, deliveryAddress, deliveryDate }
-        const evt = JSON.parse(text);
-
-        // Update in-memory state as a side effect
-        orderStatus.set(String(evt.orderId), "SHIPPED");
-
-        console.log("Consumed out-for-delivery-orders:", evt);
-      } catch (e) {
-        // Defensive logging for malformed messages
-        console.log("Bad message:", text);
-      }
-    },
-  });
 }
 
 /**
