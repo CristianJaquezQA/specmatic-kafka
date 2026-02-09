@@ -38,16 +38,10 @@ jobs:
           node server.js &
           sleep 5
 
-      - name: Detect Docker network name
-        run: |
-          NETWORK=$(docker network ls --filter "name=default" --format "{{.Name}}" | head -1)
-          echo "DOCKER_NETWORK=$NETWORK" >> $GITHUB_ENV
-          echo "Detected network: $NETWORK"
-
       - name: Run positive contract test
         run: |
           docker run --rm \
-            --network ${{ env.DOCKER_NETWORK }} \
+            --network specmatic-network \
             -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
             -v "${{ github.workspace }}/spec:/usr/src/app/spec" \
             -v "${{ github.workspace }}/spec_overlay.yaml:/usr/src/app/spec_overlay.yaml" \
