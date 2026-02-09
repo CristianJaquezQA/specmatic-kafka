@@ -1,0 +1,55 @@
+name: Contract Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contract-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd order-service
+          npm install
+
+      - name: Start Kafka infrastructure
+        run: docker-compose up -d
+
+      - name: Wait for Kafka to be ready
+        run: |
+          echo "Waiting for Kafka to be ready..."
+          sleep 30
+
+      - name: Start order service
+        run: |
+          cd order-service
+          node server.js &
+          sleep 5
+
+      - name: Run positive contract test
+        run: |
+          docker run --rm \
+            --network specmatickafka_default \
+            -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+            -v "${{ github.workspace }}/spec:/usr/src/app/spec" \
+            -v "${{ github.workspace }}/spec_overlay.yaml:/usr/src/app/spec_overlay.yaml" \
+            -v "${{ github.workspace }}/examples:/usr/src/app/examples" \
+            specmatic/specmatic-async test \
+            --overlay=/usr/src/app/spec_overlay.yaml \
+            --examples=/usr/src/app/examples
+
+      - name: Stop Kafka infrastructure
+        if: always()
+        run: docker-compose down
